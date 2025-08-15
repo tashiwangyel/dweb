@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dawa ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="./dawa.jpg">
+  <meta name="description" content="A tiny romantic website made with love." />
+  <style>
+    :root{
+      --bg1:#0f1022; --bg2:#1a0f2e; --bg3:#2a1043; --text:#ffffff; --soft:#ffffffcc; --accent:#ff4d88; --accent-2:#ffd1dc; --glass:#ffffff1a; --glass-2:#ffffff26;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
+      background: radial-gradient(1200px 800px at 80% -10%, var(--bg3), transparent 60%),
+                  radial-gradient(800px 600px at -10% 10%, #10142f, transparent 60%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+    .container{max-width:920px; margin:0 auto; padding:24px}
+    .hero{min-height:100svh; display:grid; place-items:center; text-align:center; position:relative}
+    .glass{background:var(--glass); border:1px solid var(--glass-2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius:28px; padding:28px 24px; box-shadow:0 10px 30px #00000055}
+    h1{font-size:clamp(28px,5.2vw,48px); line-height:1.15; margin:0 0 12px}
+    .lead{font-size:clamp(14px,2.9vw,18px); color:var(--soft); margin:0 auto 18px; max-width:48ch}
+    .name{color:var(--accent); font-weight:700}
+
+    /* Buttons */
+    .btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:14px}
+    .btn{--pad:14px 22px; padding:var(--pad); border-radius:999px; border:1px solid transparent; cursor:pointer; font-weight:600; font-size:16px}
+    .btn-primary{background:linear-gradient(135deg,#ff4d88,#ff7aa2); color:#fff; box-shadow:0 8px 24px #ff4d8840}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-ghost{background:transparent; color:#fff; border-color:#ffffff55}
+    .btn-ghost:hover{border-color:#ffffff88; background:#ffffff10}
+
+    /* Floating hearts */
+    .hearts{position:fixed; inset:0; pointer-events:none; overflow:hidden}
+    .heart{position:absolute; bottom:-40px; font-size:18px; animation:floatUp linear forwards; opacity:.8}
+    @keyframes floatUp{to{transform:translateY(-110vh) scale(1.2); opacity:0}}
+
+    /* YES/NO layout */
+    .choices{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:16px}
+    .no-btn{position:relative}
+
+    /* Modal */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:24px; background:#0008; z-index:40}
+    .modal.show{display:flex}
+    .card{max-width:560px}
+
+    /* Footer mini gallery */
+    .gallery{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-top:28px}
+    .gallery img{width:100%; height:120px; object-fit:cover; border-radius:16px; opacity:.9; border:1px solid #ffffff22}
+
+    /* Music bar */
+    .music{display:flex; align-items:center; gap:10px; justify-content:center; margin-top:10px}
+    .pill{background:#ffffff10; border:1px solid #ffffff22; padding:10px 14px; border-radius:999px; color: white;}
+
+    /* Typewriter */
+    .type{border-right:2px solid #ffffff99; white-space:nowrap; overflow:hidden}
+
+    /* Confetti canvas */
+    canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:30}
+
+    /* Small */
+    @media (max-width:520px){ .gallery{grid-template-columns:repeat(2,1fr)} }
+
+    /* Modal */
+.modal{
+  position:fixed; inset:0; display:none;
+  align-items:center; justify-content:center;
+  padding:24px; background:#0008; z-index:40;
+}
+.modal.show{display:flex}
+
+/* Responsive modal panel */
+.modal .card{
+  width:min(560px, 92vw);
+  max-height:min(80vh, 520px);
+  overflow:auto;
+  padding:24px;
+  /* keep your existing glass/card styles via classes */
+}
+
+/* Small screens: turn modal into a bottom sheet */
+@media (max-width:640px){
+  .modal{ 
+    align-items:flex-end; 
+    padding:0; /* we’ll handle padding on the panel */
+  }
+  .modal .card{
+    width:100vw;
+    max-height:75vh;            /* comfortable scroll area */
+    border-radius:24px 24px 0 0;/* sheet look */
+    padding:20px 16px max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Optional: very small phones */
+@media (max-width:375px){
+  .modal .card{ max-height:78vh; }
+}
+
+/* Prevent body scroll when modal open */
+body.modal-open{ overflow:hidden; }
+
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
+  <canvas id="confetti"></canvas>
+
+  <main class="container">
+    <section class="hero">
+      <div class="glass">
+        <h1 id="headline" class="type">Hi <span class="name" id="herName">Dawa </span>… Just wanted to let you know ✨</h1>
+        <p class="lead">From the little moments to the big dreams, every day with you feels like magic. So, here goes my heart… Do you miss me?</p>
+
+        <div class="choices">
+          <button class="btn btn-primary" id="yesBtn">Yes</button>
+          <button class="btn btn-ghost no-btn" id="noBtn">No 😅</button>
+        </div>
+
+        <div class="music">
+          <button class="pill" id="playSong">Do scroll down </button>
+          <span class="pill" id="timer" title="Time I've loved you on this page">⏱️ <span id="secs">0</span>s</span>
+        </div>
+
+        <div class="gallery" id="gallery">
+          <!-- Replace with your photos (optional) -->
+          <img src="./pic1.jpg" alt=""/>
+          <img src="./pic2.jpg" alt=""/>
+          <img src="./pic3.jpg" alt=""/>
+          <img src="./pic5.jpg" alt=""/>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" style="padding-bottom:60px">
+      <div class="glass card">
+        <h2 style="margin:0 0 8px">My Precious 💞</h2>
+        <p class="lead" style="margin:0">I promise to choose you every day — in little ways and in big ones — to laugh with you, grow with you, and be your home. Let's promise to be each others' forever.
+            And yap "You are my Precious 💞!"
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="glass card" style="text-align:center">
+      <h2 style="margin-top:0">I KNOW YOU DO! 🎉</h2>
+      <p class="lead">Thank you for making me the happiest person. Here’s to forever, <span class="name" id="modalName">us</span>! 💖</p>
+      <button class="btn btn-primary" id="closeModal">Aww 🥹</button>
+    </div>
+  </div>
+
+  <audio id="song" preload="none">
+    <!-- Put your mp3 URL here; many browsers block autoplay without user gesture -->
+    <!-- Example (replace!): <source src="/our-song.mp3" type="audio/mpeg" /> -->
+  </audio>
+
+  <script>
+    // ====================
+    // QUICK PERSONALIZATION
+    // ====================
+    const CONFIG = {
+      herName: 'Dawa',      // ← change to her name
+      yourName: 'Me',          // ← your name if you want to show anywhere
+      songUrl: '',             // ← put an mp3 URL if you have one
+      typewriterText: null,    // ← set custom opening line (null keeps default)
+    };
+
+    // Apply personalization
+    const herNameEl = document.getElementById('herName');
+    const modalNameEl = document.getElementById('modalName');
+    herNameEl.textContent = CONFIG.herName || 'Beautiful';
+    modalNameEl.textContent = CONFIG.herName || 'us';
+
+    const songEl = document.getElementById('song');
+    if (CONFIG.songUrl) { songEl.innerHTML = `<source src="${CONFIG.songUrl}" type="audio/mpeg">`; }
+
+    // Typewriter effect
+    const headline = document.getElementById('headline');
+    if (CONFIG.typewriterText){ headline.innerHTML = CONFIG.typewriterText; }
+    const fullText = headline.textContent.trim();
+    headline.textContent = '';
+    let idx=0; const typer = () => {
+      if(idx <= fullText.length){
+        headline.textContent = fullText.slice(0, idx++);
+        requestAnimationFrame(()=>setTimeout(typer, 30));
+      } else { headline.classList.remove('type'); }
+    }; setTimeout(typer, 400);
+
+    // Floating hearts generator
+    const heartsC = document.getElementById('hearts');
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.className='heart'; h.textContent = ['❤','💗','💖','💘','💝'][Math.floor(Math.random()*5)];
+      h.style.left = Math.random()*100 + 'vw';
+      const dur = 6 + Math.random()*5; h.style.animationDuration = dur + 's';
+      h.style.filter = `blur(${Math.random()*1.5}px)`; h.style.fontSize = (16+Math.random()*22)+'px';
+      heartsC.appendChild(h); setTimeout(()=>h.remove(), dur*1000);
+    }
+    setInterval(spawnHeart, 600);
+
+    // YES / NO logic
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+
+    // Make NO run away
+    const bounds = () => ({ w: window.innerWidth, h: window.innerHeight });
+    function moveNo(){
+      const {w,h} = bounds();
+      const x = 20 + Math.random()*(w-140);
+      const y = 20 + Math.random()*(h-180);
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+    noBtn.addEventListener('mouseenter', moveNo);
+    noBtn.addEventListener('click', moveNo);
+    window.addEventListener('resize', ()=> noBtn.style.transform='');
+
+    // Confetti (tiny, lightweight)
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let pieces = [];
+    function resize(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+    function addConfetti(count=180){
+      for(let i=0;i<count;i++){
+        pieces.push({
+          x: Math.random()*confettiCanvas.width,
+          y: Math.random()*-50,
+          r: 2+Math.random()*4,
+          vx: -2+Math.random()*4,
+          vy: 2+Math.random()*3,
+          a: Math.random()*Math.PI,
+          va: -0.1+Math.random()*0.2,
+        });
+      }
+    }
+    function step(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      for(const p of pieces){
+        p.x += p.vx; p.y += p.vy; p.a += p.va; p.vy += 0.03;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a);
+        ctx.fillStyle = ['#ff4d88','#ffd166','#06d6a0','#118ab2','#ef476f'][p.r|0 % 5];
+        ctx.fillRect(-p.r,-p.r,p.r*2,p.r*2); ctx.restore();
+      }
+      pieces = pieces.filter(p=>p.y < confettiCanvas.height+20);
+      requestAnimationFrame(step);
+    } step();
+
+    yesBtn.addEventListener('click', ()=>{
+      modal.classList.add('show');
+      addConfetti(240);
+    });
+    closeModal.addEventListener('click', ()=> modal.classList.remove('show'));
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+
+
+    // Cute timer
+    const secsEl = document.getElementById('secs');
+    let s=0; setInterval(()=>{ secsEl.textContent = ++s; }, 1000);
+
+    // Optional: prevent accidental scroll bounce from moving NO off-screen
+    document.addEventListener('scroll', ()=>{ noBtn.style.transform = noBtn.style.transform; }, {passive:true});
+    document.getElementById('playSong').addEventListener('click', () => {
+  // Scroll to the bottom of the page smoothly
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: 'smooth'
+  });
+});
+
+  </script>
+</body>
+</html>
